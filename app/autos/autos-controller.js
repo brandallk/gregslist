@@ -3,19 +3,19 @@ function AutosController() {
 
     this.formTemplate = `
         <div class="add-form px-4">
-            <form>
+            <form class="">
                 <h4 class="form-title">Add a Car</h4>
                 <div class="make form-group">
                     <label for="auto-make">Make: </label>
-                    <input type="text" class="form-control" id="auto-make" placeholder="Make" name="make">
+                    <input type="text" class="form-control query-param" id="auto-make" placeholder="Make" name="make">
                 </div>
                 <div class="model form-group">
-                    <label for="auto-model">Make: </label>
-                    <input type="text" class="form-control" id="auto-model" placeholder="Model" name="model">
+                    <label for="auto-model">Model: </label>
+                    <input type="text" class="form-control query-param" id="auto-model" placeholder="Model" name="model">
                 </div>
                 <div class="year form-group">
                     <label for="auto-year">Year: </label>
-                    <input type="number" class="form-control" id="auto-year" placeholder="Year" name="year">
+                    <input type="number" class="form-control query-param" id="auto-year" placeholder="Year" name="year">
                 </div>
                 <div class="contition form-group">
                     <label for="auto-condition">Condition: </label>
@@ -29,7 +29,7 @@ function AutosController() {
                 </div>
                 <div class="price form-group">
                     <label for="auto-price">Price: </label>
-                    <input type="number" class="form-control" id="auto-price" placeholder="Price" name="price">
+                    <input type="number" class="form-control query-param" id="auto-price" placeholder="Price" name="price">
                 </div>
                 <div class="img form-group">
                     <label for="auto-img">Photo URL: </label>
@@ -40,6 +40,22 @@ function AutosController() {
             <hr>
         </div>
     `
+
+    // this.drawSuggestion = function(suggestion) {
+    //     console.log(suggestion)
+    // }
+
+    // this.activateInputTracker = function() {
+    //     var requestParams = {}
+    //     var formInputs = Array.from(document.querySelectorAll('.query-param'))
+
+    //     formInputs.forEach( input => {
+    //         input.addEventListener('keyup', (event) => {
+    //             requestParams[event.target.name] = event.target.value
+    //             var suggestion = autosService.getFormSuggestions(requestParams, this.drawSuggestion)
+    //         })
+    //     })
+    // }
 
     this.getItemsTemplate = function() {
         var template = `<div class="items-list row justify-content-center pb-5">`
@@ -92,6 +108,8 @@ function AutosController() {
         var autosMenuButton = $('.autos-btn')
         this.activateMenuButton(autosMenuButton, autosService)
         autosMenuButton.click()
+
+        // this.activateInputTracker()
     }
 
     this.drawInitialPageState()

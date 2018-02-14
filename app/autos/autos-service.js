@@ -27,4 +27,31 @@ function AutosService() {
         var itemIndex = items.indexOf(items.find( item => item.id === itemID ))
         items.splice(itemIndex, 1)
     }
+
+    // this.getFormSuggestions = function(requestParamsObj, cb) {
+    //     console.log('sending GET request for', requestParamsObj)
+
+    //     // var url = ""
+    //     // $.get(url)
+    //     //     .done()
+    //     //     .fail()
+
+    //     // $.get(url)
+    //     //     .then()
+    //     //     .catch()
+
+    //     var success = true
+    //     var results;
+    //     if (success && requestParamsObj.make === "Toyota") {
+    //         results = {
+    //             make: "Toyota",
+    //             model: "Camry",
+    //             year: "2005",
+    //             priceRange: "$2000 - $5000",
+    //             sampleImg: "http://placehold.it/200x200"
+    //         }
+    //     }
+
+    //     cb(results)
+    // }
 }
