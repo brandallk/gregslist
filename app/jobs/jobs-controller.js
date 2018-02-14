@@ -1,6 +1,5 @@
 function JobsController() {
     var jobsService = new JobsService()
-    this.service = jobsService
 
     this.formTemplate = `
         <div class="add-form px-4">
@@ -28,7 +27,7 @@ function JobsController() {
         </div>
     `
 
-    this.getItemsTemplate = function getItemsTemplate() {
+    this.getItemsTemplate = function() {
         var template = `<div class="items-list row justify-content-center pb-5">`
         jobsService.getItems().forEach( job => {
             template += `
@@ -54,11 +53,18 @@ function JobsController() {
         }
     }
 
-    this.drawInitialPageState = function drawInitialPageState() {        
-        this.activateMenuBtn($('.jobs-btn'), this.service)
+    this.drawItemsList = function() {
+        Controller.prototype.drawItemsList.call(this)
+        this.activateDeleteButtons(jobsService)
+    }
+
+    this.drawInitialPageState = function() {
+        var jobsMenuButton = $('.jobs-btn')
+        this.activateMenuButton(jobsMenuButton, jobsService)
     }
 
     this.drawInitialPageState()
 }
 
 JobsController.prototype = new Controller()
+JobsController.prototype.constructor = JobsController

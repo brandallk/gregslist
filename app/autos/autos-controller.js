@@ -1,6 +1,5 @@
 function AutosController() {
     var autosService = new AutosService()
-    this.service = autosService
 
     this.formTemplate = `
         <div class="add-form px-4">
@@ -42,14 +41,14 @@ function AutosController() {
         </div>
     `
 
-    this.getItemsTemplate = function getItemsTemplate() {
+    this.getItemsTemplate = function() {
         var template = `<div class="items-list row justify-content-center pb-5">`
         autosService.getItems().forEach( car => {
             template += `
                 <div class="auto-card card text-center col-12 col-sm-4 col-md-3">
                     <img class="card-img-top mt-2" src="${car.img}" alt="car photo">
                     <h5 class="card-title">${car.year} ${car.make} ${car.model}</h5>
-                    <p class="card-text">${car.condition}</p>
+                    <p class="card-text">Condition: ${car.condition}</p>
                     <p class="card-text">$${car.price}</p>
                     <button type="button" class="deleteItem btn btn-danger btn-block mb-2" data-itemID="${car.id}">Remove</button>
                 </div>
@@ -71,7 +70,12 @@ function AutosController() {
         }
     }
 
-    this.drawInitialPageState = function drawInitialPageState() {        
+    this.drawItemsList = function() {
+        Controller.prototype.drawItemsList.call(this)
+        this.activateDeleteButtons(autosService)
+    }
+
+    this.drawInitialPageState = function() {        
         var template = `
             <div class="container">
                 <h1 class="text-center">Greg's List</h1>
@@ -83,12 +87,15 @@ function AutosController() {
                 <hr>
             </div>
         `
-        $('div#app').html(template)
-        this.activateMenuBtn($('.autos-btn'), this.service)
-        $('.autos-btn').click()
+        this.appDiv.html(template)
+        
+        var autosMenuButton = $('.autos-btn')
+        this.activateMenuButton(autosMenuButton, autosService)
+        autosMenuButton.click()
     }
 
     this.drawInitialPageState()
 }
 
 AutosController.prototype = new Controller()
+AutosController.prototype.constructor = AutosController

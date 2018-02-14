@@ -1,6 +1,5 @@
 function PropertiesController() {
     var propertiesService = new PropertiesService()
-    this.service = propertiesService
 
     this.formTemplate = `
         <div class="add-form px-4">
@@ -32,7 +31,7 @@ function PropertiesController() {
         </div>
     `
 
-    this.getItemsTemplate = function getItemsTemplate() {
+    this.getItemsTemplate = function() {
         var template = `<div class="items-list row justify-content-center pb-5">`
         propertiesService.getItems().forEach( property => {
             template += `
@@ -60,11 +59,18 @@ function PropertiesController() {
         }
     }
 
-    this.drawInitialPageState = function drawInitialPageState() {        
-        this.activateMenuBtn($('.properties-btn'), this.service)
+    this.drawItemsList = function() {
+        Controller.prototype.drawItemsList.call(this)
+        this.activateDeleteButtons(propertiesService)
+    }
+
+    this.drawInitialPageState = function() {
+        var propertiesMenuButton = $('.properties-btn')
+        this.activateMenuButton(propertiesMenuButton, propertiesService)
     }
 
     this.drawInitialPageState()
 }
 
 PropertiesController.prototype = new Controller()
+PropertiesController.prototype.constructor = PropertiesController

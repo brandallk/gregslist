@@ -1,23 +1,32 @@
-function Controller() {}
+function Controller() {
+    this.appDiv = $('div#app')
+}
+
+Controller.prototype.isInDOM = function(jQcollection) {
+    return jQcollection.length > 0
+}
 
 Controller.prototype.drawAddForm = function() {
-    if ($('div.add-form').length > 0) {
-        $('div.add-form').remove()
+    var addItemForm = $('div.add-form')
+
+    if (this.isInDOM(addItemForm)) {
+        addItemForm.remove()
     }
-    $('div#app').append(this.formTemplate)
+    this.appDiv.append(this.formTemplate)
 }
 
 Controller.prototype.drawItemsList = function() {
-    if ($('div.items-list').length > 0) {
-        $('div.items-list').remove()
+    var itemsList = $('div.items-list')
+
+    if (this.isInDOM(itemsList)) {
+        itemsList.remove()
     }
-    $('div#app').append(this.getItemsTemplate())
-    this.activateDeleteButtons(this.service)
+    this.appDiv.append(this.getItemsTemplate())
 }
 
-Controller.prototype.activateMenuBtn = function(btnElt, service) {
-    btnElt.off()
-    btnElt.on('click', () => {
+Controller.prototype.activateMenuButton = function(button, service) {
+    button.off()
+    button.on('click', () => {
         this.drawAddForm()
         this.drawItemsList()
         this.activateSubmitButton(service)
@@ -25,19 +34,24 @@ Controller.prototype.activateMenuBtn = function(btnElt, service) {
 }
 
 Controller.prototype.activateSubmitButton = function(service) {
-    $('button.submit').on('click', (evt) => {
+    var form = $('.add-form form').get(0)
+    var submitButton = $('button.submit')
+
+    submitButton.on('click', (evt) => {
         evt.preventDefault()
 
         var itemObj = this.makeItemObject()
         
         service.addItem(itemObj)
         this.drawItemsList()
-        $('.add-form form').get(0).reset()
+        form.reset()
     })
 }
 
 Controller.prototype.activateDeleteButtons = function(service) {
-    $('button.deleteItem').on('click', () => {
+    var deleteButton = $('button.deleteItem')
+    
+    deleteButton.on('click', () => {
         var itemID = $(this).attr('data-itemID')
         service.deleteItem(itemID)
         this.drawItemsList()
