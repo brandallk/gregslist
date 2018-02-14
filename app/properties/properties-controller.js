@@ -25,7 +25,7 @@ function PropertiesController() {
                     <label for="property-img">Photo URL: </label>
                     <input type="text" class="form-control" id="property-img" placeholder="Photo URL" name="img">
                 </div>
-                <button type="submit" class="submit btn btn-primary btn-block">Submit</button>
+                <button type="submit" class="submit btn btn-info btn-block">Submit</button>
             </form>
             <hr>
         </div>

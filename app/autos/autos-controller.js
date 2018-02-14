@@ -35,7 +35,7 @@ function AutosController() {
                     <label for="auto-img">Photo URL: </label>
                     <input type="text" class="form-control" id="auto-img" placeholder="Photo URL" name="img">
                 </div>
-                <button type="submit" class="submit btn btn-primary btn-block">Submit</button>
+                <button type="submit" class="submit btn btn-info btn-block">Submit</button>
             </form>
             <hr>
         </div>
@@ -79,10 +79,10 @@ function AutosController() {
         var template = `
             <div class="container">
                 <h1 class="text-center">Greg's List</h1>
-                <div class="Menu py-3 px-5 d-flex justify-content-around">
-                    <button type="button" class="autos-btn btn btn-info px-3">Autos</button>
-                    <button type="button" class="properties-btn btn btn-info px-3">Properties</button>
-                    <button type="button" class="jobs-btn btn btn-info px-3">Jobs</button>
+                <div class="Menu py-3 px-5 d-flex justify-content-center">
+                    <button type="button" class="autos-btn btn btn-info btn-block mt-0 rounded-0 border-right">Autos</button>
+                    <button type="button" class="properties-btn btn btn-info btn-block mt-0 rounded-0 border-right">Properties</button>
+                    <button type="button" class="jobs-btn btn btn-info btn-block mt-0 rounded-0">Jobs</button>
                 </div>
                 <hr>
             </div>

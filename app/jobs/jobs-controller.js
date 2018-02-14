@@ -21,7 +21,7 @@ function JobsController() {
                     <label for="job-salary">Salary: </label>
                     <input type="number" class="form-control" id="job-salary" placeholder="Salary" name="salary">
                 </div>
-                <button type="submit" class="submit btn btn-primary btn-block">Submit</button>
+                <button type="submit" class="submit btn btn-info btn-block">Submit</button>
             </form>
             <hr>
         </div>
