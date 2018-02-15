@@ -13,6 +13,27 @@ function AutosService() {
         this.img = img
     }
 
+    this.getAutoManufacturers= function(cb) {
+        $.get("https://vpic.nhtsa.dot.gov/api/vehicles/getallmanufacturers?format=json")
+         .done( function(data) {
+             cb(data)
+         })
+    }
+
+    this.getMakeOptions = function(mfrName, year, cb) {
+        $.get(`https://vpic.nhtsa.dot.gov/api/vehicles/GetMakesForManufacturerAndYear/${mfrName}?year=${year}&format=json`)
+         .done( function(data) {
+             cb(mfrName, data)
+         })
+    }
+
+    this.getModelOptions = function(makeName, cb) {
+        $.get(`https://vpic.nhtsa.dot.gov/api/vehicles/getmodelsformake/${makeName}?format=json`)
+         .done( function(data) {
+             cb(data)
+         })
+    }
+
     this.getItems = function() {
         return JSON.parse(JSON.stringify(items))
     }
@@ -26,26 +47,5 @@ function AutosService() {
     this.deleteItem = function(itemID) {
         var itemIndex = items.indexOf(items.find( item => item.id === itemID ))
         items.splice(itemIndex, 1)
-    }
-
-    this.getModelOptions = function(makeName, cb) {
-        $.get(`https://vpic.nhtsa.dot.gov/api/vehicles/getmodelsformake/${makeName}?format=json`)
-         .done( function(data) {
-             cb(data)
-         })
-    }
-
-    this.getMakeOptions = function(mfrName, year, cb) {
-        $.get(`https://vpic.nhtsa.dot.gov/api/vehicles/GetMakesForManufacturerAndYear/${mfrName}?year=${year}&format=json`)
-         .done( function(data) {
-             cb(mfrName, data)
-         })
-    }
-
-    this.getAutoManufacturers= function(cb) {
-        $.get("https://vpic.nhtsa.dot.gov/api/vehicles/getallmanufacturers?format=json")
-         .done( function(data) {
-             cb(data)
-         })
     }
 }

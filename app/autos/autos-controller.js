@@ -8,15 +8,6 @@ function AutosController() {
                 <div class="year form-group">
                     <label for="auto-year">Year: </label>
                     <select class="form-control query-param" id="auto-year" name="year">
-                        <option value="1998">1998</option>
-                        <option value="1999">1999</option>
-                        <option value="2000">2000</option>
-                        <option value="2001">2001</option>
-                        <option value="2002">2002</option>
-                        <option value="2003">2003</option>
-                        <option value="2004">2004</option>
-                        <option value="2005">2005</option>
-                        <option value="2006">2006</option>
                     </select>
                 </div>
                 <div class="manufacturer form-group">
@@ -35,20 +26,19 @@ function AutosController() {
                 <div class="contition form-group">
                     <label for="auto-condition">Condition: </label>
                     <select class="form-control" id="auto-condition" name="condition">
-                        <option value="0">"new"</option>
+                        <option value="0">new</option>
                         <option value="1">like new</option>
                         <option value="2">fair</option>
-                        <option value="3">rust-bucket</option>
-                        <option value="4">you got a tow truck?</option>
+                        <option value="4">needs work</option>
                     </select>
                 </div>
                 <div class="price form-group">
                     <label for="auto-price">Price: </label>
-                    <select class="form-control" id="auto-price" name="condition"></select>
+                    <input type="text" class="form-control" id="auto-price" placeholder="Price" name="price">
                 </div>
                 <div class="img form-group">
                     <label for="auto-img">Photo URL: </label>
-                    <input type="text" class="form-control" id="auto-img" placeholder="Photo URL" name="img">
+                    <input type="url" class="form-control" id="auto-img" placeholder="Photo URL" name="img" value="https://i1.sndcdn.com/artworks-000119183399-sovq5a-t200x200.jpg">
                 </div>
                 <button type="submit" class="submit btn btn-info btn-block">Submit</button>
             </form>
@@ -56,31 +46,35 @@ function AutosController() {
         </div>
     `
 
-    this.drawYearOptions = function() {
-        var $selectYear = $('select#auto-year')
-        var options = []
+    function drawYearSelectOptions() {
+        var $yearSelectList = $('select#auto-year')
+        var template = ""
 
-        var start = 1950, end = 2018, i = start
-        while (i <= end) {
+        // Generate a list of years from present back to 1950
+        var options = ["choose"]
+        var start = new Date().getFullYear(), end = 1950, i = start
+        while (i >= end) {
             options.push(i)
-            i++
+            i--
         }
 
-        var template = ""
         options.forEach( year => {
             template += `<option value="${year}">${year}</option>`
         })
-        $selectYear.html(template)
+        $yearSelectList.html(template)
     }
 
-    this.drawManufacturerOptions = function(data) {
-        var $selectMfr = $('select#auto-manufacturer')
+    function drawManufacturerOptions(data) {
+        var $mfrSelectList = $('select#auto-manufacturer')
         var template = ""
 
+        // Sort the list and eliminate repeats and nulls
         var mfrNames = data.Results.map( mfr => mfr.Mfr_CommonName ).sort()
         var uniqueNames = mfrNames.filter( (name, index) => {
-            if (name === null) { return false }
-            if (mfrNames[index - 1]) {
+            if (name === null) { 
+                return false
+            }
+            if (index > 0) {
                 return name != mfrNames[index - 1]
             }
             return true
@@ -89,30 +83,34 @@ function AutosController() {
         uniqueNames.forEach( name => {
             template += `<option>${name}</option>`
         })
-        $selectMfr.html(template)
+        $mfrSelectList.html(template)
     }
 
-    this.activateMfrInputTracker = function() {
-        var $trigger = $('select#auto-manufacturer')
-        var $selectModel = $('#auto-model')
-        $trigger.on('change', (event) => {
-            $selectModel.html("")
+    function activateMfrSelectList() {
+        var $mfrSelectList = $('select#auto-manufacturer')
+        var $modelSelectList = $('select#auto-model')
+        var $yearSelectList = $('select#auto-year')
+
+        $mfrSelectList.on('change', (event) => {
+            $modelSelectList.html("")
             var mfrName = event.target.value
-            var year = $('#auto-year').get(0).value
-            autosService.getMakeOptions(mfrName, year, this.drawMakeOptions)
+            var year = $yearSelectList.get(0).value
+            autosService.getMakeOptions(mfrName, year, drawMakeOptions)
         })
     }
 
-    this.drawMakeOptions = function(mfrName, data) {
-        var $selectMake = $('#auto-make')
+    function drawMakeOptions(mfrName, data) {
+        var $makeSelectList = $('select#auto-make')
+        var currentMakeSelection = $makeSelectList.get(0).value
         var template = ""
-
+        
+        // Eliminate repeats
         if (data.Results) {
             var makeNames = data.Results.map( make => make.MakeName ).sort()
             var uniqueNames = makeNames
             if (makeNames.length) {
                 uniqueNames = makeNames.filter( (name, index) => {
-                    if (makeNames[index - 1]) {
+                    if (index > 0) {
                         return name != makeNames[index - 1]
                     }
                     return true
@@ -123,40 +121,42 @@ function AutosController() {
             })
         }
 
-        $selectMake.html(template)
+        $makeSelectList.html(template)
+
+        // (Re)draw the modelSelectList options when the manufacturer selection changes
+        autosService.getModelOptions(currentMakeSelection, drawModelOptions)
     }
 
-    this.activateMakeInputTracker = function() {
-        var $makeElt = $('#auto-make')
-        var $triggers = $('#auto-manufacturer, #auto-make')
+    function activateMakeSelectList() {
+        var $makeSelectList = $('select#auto-make')
+        var $mfrSelectList = $('select#auto-manufacturer')
+        var $triggers = $makeSelectList.add($mfrSelectList)
+
         $triggers.on('change', (event) => {
-            var makeName = $makeElt.get(0).value
-            autosService.getModelOptions(makeName, this.drawModelOptions)
+            var makeName = $makeSelectList.get(0).value
+            autosService.getModelOptions(makeName, drawModelOptions)
         })
     }
 
-    // Still getting previous-manufacturer model numbers when manufacurer changes
-    this.drawModelOptions = function(data) {
-        var $selectModel = $('#auto-model')
+    function drawModelOptions(data) {
+        var $modelSelectList = $('#auto-model')
         var template = ""
 
         if (data.Results) {
-            var modelNames = data.Results.map( model => {
-                return model.Model_Name ? model.Model_Name : "(any)"
-            }).sort()
+            var modelNames = data.Results.map( model => model.Model_Name ).sort()
             modelNames.forEach( name => {
                 template += `<option>${name}</option>`
             })
         }
 
-        $selectModel.html(template)
+        $modelSelectList.html(template)
     }
 
     this.getItemsTemplate = function() {
         var template = `<div class="items-list row justify-content-center pb-5">`
         autosService.getItems().forEach( car => {
             template += `
-                <div class="auto-card card text-center col-12 col-sm-4 col-md-3">
+                <div class="auto-card card text-center col-7 col-sm-4 col-md-3">
                     <img class="card-img-top mt-2" src="${car.img}" alt="car photo">
                     <h5 class="card-title">${car.year} ${car.make} ${car.model}</h5>
                     <p class="card-text">Condition: ${car.condition}</p>
@@ -204,11 +204,11 @@ function AutosController() {
         this.activateMenuButton(autosMenuButton, autosService)
         autosMenuButton.click()
 
-        this.drawYearOptions()
-        this.activateMfrInputTracker()
-        this.activateMakeInputTracker()
+        drawYearSelectOptions()
+        activateMfrSelectList()
+        activateMakeSelectList()
 
-        autosService.getAutoManufacturers(this.drawManufacturerOptions.bind(this))
+        autosService.getAutoManufacturers(drawManufacturerOptions)
     }
 
     this.drawInitialPageState()

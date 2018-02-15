@@ -45,6 +45,11 @@ Controller.prototype.activateSubmitButton = function(service) {
         service.addItem(itemObj)
         this.drawItemsList()
         form.reset()
+
+        if ($('select#auto-make')) {
+            $('select#auto-make').html("")
+            $('select#auto-model').html("")
+        }
     })
 }
 
