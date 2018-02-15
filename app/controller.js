@@ -8,7 +8,7 @@ Controller.prototype.isInDOM = function(jQcollection) {
 
 Controller.prototype.drawAddForm = function() {
     var addItemForm = $('div.add-form')
-
+    
     if (this.isInDOM(addItemForm)) {
         addItemForm.remove()
     }

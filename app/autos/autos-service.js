@@ -28,30 +28,24 @@ function AutosService() {
         items.splice(itemIndex, 1)
     }
 
-    // this.getFormSuggestions = function(requestParamsObj, cb) {
-    //     console.log('sending GET request for', requestParamsObj)
+    this.getModelOptions = function(makeName, cb) {
+        $.get(`https://vpic.nhtsa.dot.gov/api/vehicles/getmodelsformake/${makeName}?format=json`)
+         .done( function(data) {
+             cb(data)
+         })
+    }
 
-    //     // var url = ""
-    //     // $.get(url)
-    //     //     .done()
-    //     //     .fail()
+    this.getMakeOptions = function(mfrName, year, cb) {
+        $.get(`https://vpic.nhtsa.dot.gov/api/vehicles/GetMakesForManufacturerAndYear/${mfrName}?year=${year}&format=json`)
+         .done( function(data) {
+             cb(mfrName, data)
+         })
+    }
 
-    //     // $.get(url)
-    //     //     .then()
-    //     //     .catch()
-
-    //     var success = true
-    //     var results;
-    //     if (success && requestParamsObj.make === "Toyota") {
-    //         results = {
-    //             make: "Toyota",
-    //             model: "Camry",
-    //             year: "2005",
-    //             priceRange: "$2000 - $5000",
-    //             sampleImg: "http://placehold.it/200x200"
-    //         }
-    //     }
-
-    //     cb(results)
-    // }
+    this.getAutoManufacturers= function(cb) {
+        $.get("https://vpic.nhtsa.dot.gov/api/vehicles/getallmanufacturers?format=json")
+         .done( function(data) {
+             cb(data)
+         })
+    }
 }
