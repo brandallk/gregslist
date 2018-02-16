@@ -15,20 +15,20 @@ Controller.prototype.drawAddForm = function() {
     this.appDiv.append(this.formTemplate)
 }
 
-Controller.prototype.drawItemsList = function() {
+Controller.prototype.drawItemsList = function(items) {
     var itemsList = $('div.items-list')
 
     if (this.isInDOM(itemsList)) {
         itemsList.remove()
     }
-    this.appDiv.append(this.getItemsTemplate())
+    this.appDiv.append(this.getItemsTemplate(items))
 }
 
 Controller.prototype.activateMenuButton = function(button, service) {
     button.off()
     button.on('click', () => {
         this.drawAddForm()
-        this.drawItemsList()
+        this.getItems()
         this.activateSubmitButton(service)
     })
 }
@@ -40,10 +40,7 @@ Controller.prototype.activateSubmitButton = function(service) {
     submitButton.on('click', (evt) => {
         evt.preventDefault()
 
-        var itemObj = this.makeItemObject()
-        
-        service.addItem(itemObj)
-        this.drawItemsList()
+        service.addItem(form, this.drawItemsList.bind(this))
         form.reset()
 
         if ($('select#auto-make')) {
@@ -56,9 +53,8 @@ Controller.prototype.activateSubmitButton = function(service) {
 Controller.prototype.activateDeleteButtons = function(service) {
     var deleteButton = $('button.deleteItem')
     
-    deleteButton.on('click', () => {
-        var itemID = $(this).attr('data-itemID')
-        service.deleteItem(itemID)
-        this.drawItemsList()
+    deleteButton.on('click', (evt) => {
+        var itemID = evt.target.getAttribute('data-itemID')
+        service.deleteItem(itemID, this.drawItemsList.bind(this))
     })
 }

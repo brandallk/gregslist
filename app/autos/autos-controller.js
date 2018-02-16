@@ -152,9 +152,9 @@ function AutosController() {
         $modelSelectList.html(template)
     }
 
-    this.getItemsTemplate = function() {
+    this.getItemsTemplate = function(items) {
         var template = `<div class="items-list row justify-content-center pb-5">`
-        autosService.getItems().forEach( car => {
+        items.forEach( car => {
             template += `
                 <div class="auto-card card text-center col-7 col-sm-4 col-md-3">
                     <img class="card-img-top mt-2" src="${car.img}" alt="car photo">
@@ -181,9 +181,13 @@ function AutosController() {
         }
     }
 
-    this.drawItemsList = function() {
-        Controller.prototype.drawItemsList.call(this)
+    this.drawItemsList = function(items) {
+        Controller.prototype.drawItemsList.call(this, items)
         this.activateDeleteButtons(autosService)
+    }
+
+    this.getItems = function() {
+        autosService.getItems(this.drawItemsList.bind(this))
     }
 
     this.drawInitialPageState = function() {        
@@ -209,6 +213,8 @@ function AutosController() {
         activateMakeSelectList()
 
         autosService.getAutoManufacturers(drawManufacturerOptions)
+
+        this.getItems() // Make initial GET request to db
     }
 
     this.drawInitialPageState()
